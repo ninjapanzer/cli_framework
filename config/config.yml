@@ -1,0 +1,2 @@
+surveyDb: survey_db.sqlite
+surveySchema: db/survey_schema.sql
