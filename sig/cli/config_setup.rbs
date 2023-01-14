@@ -1,0 +1,5 @@
+module Cli
+  module ConfigSetup
+    def self.autosetup: -> bool
+  end
+end

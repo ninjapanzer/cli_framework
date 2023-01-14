@@ -1,8 +1,9 @@
-require 'yaml'
+require "yaml"
+
 module Cli::ConfigLoader
   def self.load
     # Load the config file
-    @config = YAML.load_file("#{__dir__}/../../config/config.yml")
+    @config = YAML.load_file(File.join(Dir.home, ".cli", "config.yml"))
   end
 
   def self.config
