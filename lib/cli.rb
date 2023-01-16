@@ -21,4 +21,4 @@ module Cli
   end
 end
 
-Cli::Command::Config.start(ARGV)
+Cli::Command::Config::Command.start(ARGV) if $0 == __FILE__
