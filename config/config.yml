@@ -4,3 +4,6 @@ commands:
   - name: cli_survey
     path: commands/cli_survey
   - name: bundler
+configs:
+  - name: cli_survey
+    surveyDir: surveys

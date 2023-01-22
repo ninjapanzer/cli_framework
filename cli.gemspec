@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "lib/cli/version"
+require 'yaml'
 
 Gem::Specification.new do |spec|
   spec.name = "cli"
@@ -35,6 +36,14 @@ Gem::Specification.new do |spec|
   spec.add_dependency "zeitwerk", "~> 2.6.6"
   spec.add_dependency "thor", "~> 1.2.1"
   spec.add_dependency "sqlite3", "~> 1.4.2"
+
+  # load yaml config from the home directory .cli/config.yml and extract an array of commands
+  config_dir = File.join(Dir.home, '.cli')
+  config_commands = YAML.load_file(File.join(config_dir, 'config.yml'))['commands']
+  config_commands.map do |command_options|
+    spec.add_runtime_dependency command_options['name']
+  end
+
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
