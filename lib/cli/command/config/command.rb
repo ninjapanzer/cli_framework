@@ -4,9 +4,13 @@
 # in a hidden folder called ".cli" and will be called "config.yml"
 
 module Cli::Command::Config
-  class Command < Thor
-    namespace :config
-    desc "config", "Setup the configuration file"
-    subcommand "config", ConfigCommands
+  class Command
+    # namespace :config
+    # desc "config", "Setup the configuration file"
+    # subcommand "config", ConfigCommands
+    def self.register_command
+      Thor.register(ConfigCommands, "config", "config", "Setup the configuration file")
+    end
   end
+
 end

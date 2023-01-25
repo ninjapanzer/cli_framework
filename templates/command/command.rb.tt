@@ -1,0 +1,7 @@
+module Cli::Command::<%= @command_klass %>
+  class Command < Thor
+    namespace :<%= @command_syntax %>
+    desc "generate-cli", "Setup the configuration file"
+    subcommand "generate-cli", ConfigCommands
+  end
+end

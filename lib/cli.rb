@@ -48,4 +48,9 @@ module Cli
   end
 end
 
-Cli::Command::Config::Command.start(ARGV) if $0 == __FILE__
+# Cli::Command::GenerateCommand::Command.new.run
+
+# Cli::Command::Config::Command.start(ARGV) if $0 == __FILE__
+
+Cli::Command::Commands.start(ARGV) if $0 == __FILE__
+puts Cli::Command::Commands.all_commands
