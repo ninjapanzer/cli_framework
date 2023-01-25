@@ -38,14 +38,20 @@ loader.setup
 module Cli
   CONFIG_PATH = File.join(Dir.home, ".cli", "config.yml")
 
-  class Error < StandardError
+  class Error < StandardError; end
+
+  class Start < Thor;
+    namespace :config
+    desc "config", "Setup the configuration file"
+    subcommand "config", Command::Config::ConfigCommands
   end
+
   # Your code goes here...
   ConfigSetup.autosetup(config_path: CONFIG_PATH)
   CONFIG = ConfigLoader.config.freeze
   CONFIG["commands"].map do |command_options|
-    Sideloader.new(gem_name: command_options["name"], path: command_options["path"]).load
+    Sideloader.new(cli_klass: Start, gem_name: command_options["name"], path: command_options["path"]).load
   end
 end
 
-Cli::Command::Config::Command.start(ARGV) if $0 == __FILE__
+Cli::Start.start(ARGV) if $0 == __FILE__
