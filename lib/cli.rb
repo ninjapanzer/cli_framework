@@ -13,7 +13,7 @@ rescue Bundler::BundlerError => e
     gemfile = File.join(dir, 'Gemfile')
     lockfile = File.join(dir, 'Gemfile.lock')
     # Set the path to the Gemfile
-    installer = Bundler::Installer.install(
+    Bundler::Installer.install(
       File.join(dir, 'Gemfile'),
       Bundler::Definition.build(gemfile, lockfile, nil),
       {
@@ -34,24 +34,25 @@ require "sqlite3"
 
 loader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)
 loader.setup
+loader.eager_load_namespace(Cli::Command)
 
 module Cli
   CONFIG_PATH = File.join(Dir.home, ".cli", "config.yml")
 
   class Error < StandardError; end
-
-  class Start < Thor;
-    namespace :config
-    desc "config", "Setup the configuration file"
-    subcommand "config", Command::Config::ConfigCommands
-  end
+  class Boot < Thor; end
 
   # Your code goes here...
   ConfigSetup.autosetup(config_path: CONFIG_PATH)
   CONFIG = ConfigLoader.config.freeze
+
+  Cli::Refinements::ThorRegistry::Registry.commands.map do |local_command|
+    Sideloader.new(cli_klass: Boot, gem_name: nil, path: nil).register_local_command(local_command_description: local_command)
+  end
+
   CONFIG["commands"].map do |command_options|
-    Sideloader.new(cli_klass: Start, gem_name: command_options["name"], path: command_options["path"]).load
+    Sideloader.new(cli_klass: Boot, gem_name: command_options["name"], path: command_options["path"]).load
   end
 end
 
-Cli::Start.start(ARGV) if $0 == __FILE__
+Cli::Boot.start(ARGV) if $0 == __FILE__

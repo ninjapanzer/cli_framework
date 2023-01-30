@@ -5,8 +5,10 @@
 
 module Cli::Command::Config
   class Command < Thor
+    using Cli::Refinements::ThorRegistry
+
     namespace :config
     desc "config", "Setup the configuration file"
-    subcommand "config", ConfigCommands
+    subcommand commands_klass: ConfigCommands
   end
 end
