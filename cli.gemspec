@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "zeitwerk", "~> 2.6.6"
   spec.add_dependency "thor", "~> 1.2.1"
   spec.add_dependency "sqlite3", "~> 1.4.2"
+  spec.add_dependency "cli_toolkit", "~> 0.1.0"
 
   # load yaml config from the home directory .cli/config.yml and extract an array of commands
   config_dir = File.join(Dir.home, '.cli')

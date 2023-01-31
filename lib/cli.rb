@@ -31,6 +31,9 @@ require_relative "cli/version"
 require "zeitwerk"
 require "thor"
 require "sqlite3"
+require 'cli/toolkit/refinements'
+require 'cli/toolkit/sideloader'
+
 
 loader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)
 loader.setup
@@ -46,13 +49,15 @@ module Cli
   ConfigSetup.autosetup(config_path: CONFIG_PATH)
   CONFIG = ConfigLoader.config.freeze
 
-  Cli::Refinements::ThorRegistry::Registry.commands.map do |local_command|
-    Sideloader.new(cli_klass: Boot, gem_name: nil, path: nil).register_local_command(local_command_description: local_command)
+  CliToolkit::Registry.reset!.map do |local_command|
+    CliToolkit::Sideloader.new(cli_klass: Boot, gem_name: nil, path: nil).register_local_command(local_command_description: local_command)
   end
 
   CONFIG["commands"].map do |command_options|
-    Sideloader.new(cli_klass: Boot, gem_name: command_options["name"], path: command_options["path"]).load
+    CliToolkit::Sideloader.new(cli_klass: Boot, gem_name: command_options["name"], path: command_options["path"]).load
   end
 end
+
+puts CliToolkit::Registry.commands.map { |command| command[:details][:name]}.inspect
 
 Cli::Boot.start(ARGV) if $0 == __FILE__
