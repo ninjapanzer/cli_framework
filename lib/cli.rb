@@ -37,7 +37,6 @@ require 'cli/toolkit/sideloader'
 
 loader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)
 loader.setup
-loader.eager_load_namespace(Cli::Command)
 
 module Cli
   CONFIG_PATH = File.join(Dir.home, ".cli", "config.yml")
@@ -45,18 +44,24 @@ module Cli
   class Error < StandardError; end
   class Boot < Thor; end
 
-  # Your code goes here...
   ConfigSetup.autosetup(config_path: CONFIG_PATH)
   CONFIG = ConfigLoader.config.freeze
 
-  CliToolkit::Registry.reset!.map do |local_command|
-    CliToolkit::Sideloader.new(cli_klass: Boot, gem_name: nil, path: nil).register_local_command(local_command_description: local_command)
-  end
+  # Your code goes here...
+  def self.sideload
+    CliToolkit::Registry.reset!.map do |local_command|
+      CliToolkit::Sideloader.load_command(cli_klass: Boot).register_commands(command_description: local_command)
+    end
 
-  CONFIG["commands"].map do |command_options|
-    CliToolkit::Sideloader.new(cli_klass: Boot, gem_name: command_options["name"], path: command_options["path"]).load
+    CONFIG["commands"].map do |command_options|
+      CliToolkit::Sideloader.import_gem_commands(cli_klass: Boot, gem_name: command_options["name"], path: command_options["path"])
+                            .load_command_gem
+    end
   end
 end
+
+loader.eager_load_namespace(Cli::Command)
+Cli.sideload
 
 puts CliToolkit::Registry.commands.map { |command| command[:details][:name]}.inspect
 
