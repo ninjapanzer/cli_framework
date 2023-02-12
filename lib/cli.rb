@@ -64,6 +64,6 @@ end
 loader.eager_load_namespace(Cli::Command)
 Cli.sideload
 
-puts CliToolkit::Registry.commands.map { |command| command[:details][:name]}.inspect
+# puts CliToolkit::Registry.commands.map { |command| command[:details][:name]}.inspect
 
 Cli::Boot.start(ARGV) if $0 == __FILE__

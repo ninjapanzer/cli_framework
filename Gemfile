@@ -9,15 +9,15 @@ yml_location = File.join(config_dir, 'config.yml')
 if File.exist?(yml_location)
   config_commands = YAML.load_file(yml_location)['commands']
   config_commands.map do |command_options|
-    puts command_options.inspect
+    # puts command_options.inspect
     case
     when command_options['path']
       path = File.join(config_dir, 'commands', command_options['name'])
-      puts path
+      # puts path
       gem command_options['name'], path: path
     when command_options['path_relative']
       path = File.join(Dir.pwd, command_options['name'])
-      puts path
+      # puts path
       gem command_options['name'], path: path
     else
       gem command_options['name']
