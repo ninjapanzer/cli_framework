@@ -22,6 +22,7 @@ rescue Bundler::BundlerError => e
       }
     )
     puts "Bundle install completed successfully"
+    exit 0
   else
     puts "Bundle install skipped"
   end

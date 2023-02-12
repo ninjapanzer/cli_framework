@@ -2,7 +2,8 @@ surveyDb: survey_db.sqlite
 surveySchema: db/survey_schema.sql
 commands:
   - name: cli_survey
-    path: commands/cli_survey
+    # path: commands/cli_survey
+    path_relative: ../cli_survey
   - name: bundler
 configs:
   - name: cli_survey
